@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:weightSum="100"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/activity_display_card"
+    android:id="@+id/save_toolbar"
+    android:layout_alignParentBottom="true">
+
+
+    <Button
+        android:id="@+id/save_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/save_card"
+        android:layout_weight="50"
+        android:onClick="saveCard"/>
+    <Button
+        android:id="@+id/share_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/share"
+        android:layout_weight="50"
+        android:onClick="saveAndShareCard"/>
+
+</LinearLayout>

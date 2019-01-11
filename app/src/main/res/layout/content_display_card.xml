@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/display_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".DisplayCard"
+    tools:showIn="@layout/activity_display_card"
+
+    >
+<FrameLayout
+    android:id="@+id/final_card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+    <ImageView
+        android:id="@+id/final_card_background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        />
+    <TextView
+        android:id="@+id/final_card_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="50dp"
+        />
+</FrameLayout>
+
+    <include layout="@layout/save_share_card_options" />
+
+</RelativeLayout>

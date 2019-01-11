@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Gracious Gratitudes</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_edit_card">EditCard</string>
+    <string name="welcome_message">Welcome to Gracious Gratitudes!\nFollow the steps below to create your very own personalized thank you card.</string>
+    <string name="choose_a_font">Choose a font</string>
+    <string name="choose_a_background">Choose a background</string>
+    <string name="step_3">Step 3:</string>
+    <string name="thank_you">Thank you</string>
+    <string name="default_thank_you_card">Dear Friend,\n
+        Thank you for your generous and thoughtful gift. I really appreciate how much you have done for me.
+        Looking forward sharing in many more joyous occasions.\n
+        All the best,\n
+        The wonderful me!
+    </string>
+    <string name="title_activity_edit_background">Edit Background</string>
+    <string name="title_activity_edit_font">Edit Font</string>
+    <string name="title_activity_edit_text">Edit Text</string>
+    <string name="title_activity_display_card">DisplayCard</string>
+    <string name="save_card">Save Card</string>
+    <string name="share">Save &amp; Share</string>
+    <string name="displayCardLabel">Thank You Card</string>
+</resources>
