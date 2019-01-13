@@ -1,11 +1,17 @@
 package com.example.dbernst1.graciousgratitudes;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,9 +54,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        startNewCard();
+
+        setUpFAB();
+    }
+
+    private void setUpFAB() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //here goes the code to call DisplayCardLand/Port depending on the orientation
+                //that page displays the completed card and allows the user to save it
+                launchCard();
+            }
+        });
+    }
+
+    private void startNewCard() {
         //set the current values - also only for the first time,
         // the rest of the times that this activity is called these variables will be set when the data comes back from the earlier activity
         //in the onActivityResults
@@ -72,18 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
         //set default text
         mTextEditor.setText(mCurrentText);
-
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //here goes the code to call DisplayCardLand/Port depending on the orientation
-                //that page displays the completed card and allows the user to save it
-                launchCard();
-            }
-        });
     }
 
     private void launchCard() {
@@ -99,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         }
         intent.putExtra(SELECTED_BACKGROUND, mChosenBackground);
         intent.putExtra(SELECTED_CURRENT_FONT, mCurrentFont);
+
+        //get the text from the text editor in case the user changed it from the main page without going to full screen mode
+        mCurrentText  = mTextEditor.getText().toString();
         intent.putExtra(SELECTED_CARD_TEXT, mCurrentText);
 
         startActivity(intent);
@@ -108,32 +123,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //check if resultCode is RESULT_OK -
         //no need for this since it will always be ok because of the default selected option
-        switch(requestCode)
-        {
-            case REQUEST_CODE_BACKGROUND:
-                //get the background image user chose
-                //place the default image if they chose nothing
-                if(mCurrentOrientation==R.id.landscape)
-                {
-                    mChosenBackground = data.getIntExtra(BACKGROUND_IMAGE_LAND, R.drawable.ltexturedpinkpetal);
-                    mLCurrentBackground = mChosenBackground;
-                }
-                else{
-                    mChosenBackground = data.getIntExtra(BACKGROUND_IMAGE_PORT, R.drawable.ptexturedpinkpetal);
-                    mPCurrentBackground = mChosenBackground;
-                }
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_BACKGROUND:
+                    //get the background image user chose
+                    //place the default image if they chose nothing
+                    if (mCurrentOrientation == R.id.landscape) {
+                        mChosenBackground = data.getIntExtra(BACKGROUND_IMAGE_LAND, R.drawable.ltexturedpinkpetal);
+                        mLCurrentBackground = mChosenBackground;
+                    } else {
+                        mChosenBackground = data.getIntExtra(BACKGROUND_IMAGE_PORT, R.drawable.ptexturedpinkpetal);
+                        mPCurrentBackground = mChosenBackground;
+                    }
 
-                mBackground_image.setImageResource(mChosenBackground);
-                break;
-            case REQUEST_CODE_FONT:
-                mCurrentFont = data.getIntExtra(FONT, R.font.kimberly);
-                Typeface typeface = ResourcesCompat.getFont(getApplicationContext(), mCurrentFont);
-                mFont_view.setTypeface(typeface);
-                break;
-            case REQUEST_CODE_TEXT:
-                mCurrentText=data.getStringExtra(SELECTED_CARD_TEXT);
-                mTextEditor.setText(mCurrentText);
-                break;
+                    mBackground_image.setImageResource(mChosenBackground);
+                    break;
+                case REQUEST_CODE_FONT:
+                    mCurrentFont = data.getIntExtra(FONT, R.font.kimberly);
+                    Typeface typeface = ResourcesCompat.getFont(getApplicationContext(), mCurrentFont);
+                    mFont_view.setTypeface(typeface);
+                    break;
+                case REQUEST_CODE_TEXT:
+                    mCurrentText = data.getStringExtra(SELECTED_CARD_TEXT);
+                    mTextEditor.setText(mCurrentText);
+                    break;
+            }
         }
     }
 
@@ -192,5 +206,19 @@ public class MainActivity extends AppCompatActivity {
         mCurrentText = mTextEditor.getText().toString();
         intent.putExtra(CARD_TEXT, mCurrentText);
         startActivityForResult(intent, REQUEST_CODE_TEXT);
+    }
+
+    public void showAbout(MenuItem item) {
+        //show the user the 'about' message
+       Intent intent = new Intent(this, About.class);
+        startActivity(intent);
+    }
+
+
+    //on click for the menu option to start a new card
+    public void newCard(MenuItem item) {
+        //call the start new card method to reset all the options to their default values
+        startNewCard();
+
     }
 }

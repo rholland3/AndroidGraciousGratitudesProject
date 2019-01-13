@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -24,19 +25,18 @@ public class EditFont extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_font);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setUpToolbar();
 
         getIncomingData();
 
         //fill array
         mFonts=getFonts();
 
-        GridView gridView = (GridView)findViewById(R.id.gridview);
+        GridView gridView = findViewById(R.id.gridview);
         mAdapter = new FontAdapter(this, mFonts, mTEXT, mCurrentFont);
         gridView.setAdapter(mAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,6 +44,22 @@ public class EditFont extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed(); //make the back arrow act like the back button on the android screen
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private int[] getFonts()
@@ -69,9 +85,11 @@ public class EditFont extends AppCompatActivity {
     @Override
     public void finish()
     {
-        Intent intentResults = new Intent();
-        intentResults.putExtra(FONT, mSelectedFont);
-        setResult(RESULT_OK, intentResults);
+        if(mSelectedFont != 0) {
+            Intent intentResults = new Intent();
+            intentResults.putExtra(FONT, mSelectedFont);
+            setResult(RESULT_OK, intentResults);
+        }
         super.finish();
     }
 }

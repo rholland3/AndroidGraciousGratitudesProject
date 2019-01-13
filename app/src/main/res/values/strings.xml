@@ -20,4 +20,6 @@
     <string name="save_card">Save Card</string>
     <string name="share">Save &amp; Share</string>
     <string name="displayCardLabel">Thank You Card</string>
+    <string name="action_about">Gracious Gratitudes is a three step process which generates a thank you card.\n\nFollow the steps to personalize your very own thank you card.  \n\nEnjoy!\n\n\n\nCreated by: \nDeborah Bernstein and \nRachel Hollander\nTouro College: Fall 2018 \nAndroid App Programming \nProf. Samuel Abrahamson</string>
+    <string name="title_activity_about">About</string>
 </resources>

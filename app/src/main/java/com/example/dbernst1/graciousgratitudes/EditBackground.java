@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 
@@ -27,8 +28,7 @@ public class EditBackground extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_background);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setUpToolbar();
 
         //set orientation of the background
         getIncomingData();
@@ -44,13 +44,13 @@ public class EditBackground extends AppCompatActivity {
         }
 
 
-        GridView gridView = (GridView)findViewById(R.id.gridview);
+        GridView gridView = findViewById(R.id.gridview);
         mAdapter = new BackGroundAdapter(this, mBackgrounds, mCurrentBackground);
         gridView.setAdapter(mAdapter);
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +58,22 @@ public class EditBackground extends AppCompatActivity {
               finish();
             }
         });
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed(); //make the back arrow act like the back button on the android screen
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getIncomingData()
@@ -78,15 +94,18 @@ public class EditBackground extends AppCompatActivity {
     @Override
     public void finish()
     {
-        Intent intentResults = new Intent();
-        if(mOrientation == R.id.landscape) {
-            intentResults.putExtra(BACKGROUND_IMAGE_LAND, mSelectedBackground);
-        }else
-        {
-            intentResults.putExtra(BACKGROUND_IMAGE_PORT, mSelectedBackground);
+        //only set the result_ok if the background was selected
+        if(mSelectedBackground != 0) {
+            Intent intentResults = new Intent();
+            if (mOrientation == R.id.landscape) {
+                intentResults.putExtra(BACKGROUND_IMAGE_LAND, mSelectedBackground);
+            } else {
+                intentResults.putExtra(BACKGROUND_IMAGE_PORT, mSelectedBackground);
+            }
+            setResult(RESULT_OK, intentResults);
         }
-        setResult(RESULT_OK, intentResults);
         super.finish();
+
     }
 
     private int[] getPBackgrounds()

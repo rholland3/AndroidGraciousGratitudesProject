@@ -13,10 +13,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -49,8 +51,7 @@ public class DisplayCard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_card);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setUpToolbar();
 
         mImageView = findViewById(R.id.final_card_background);
         mTextView = findViewById(R.id.final_card_text);
@@ -65,6 +66,22 @@ public class DisplayCard extends AppCompatActivity {
         mCard = findViewById(R.id.final_card);
 
 
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed(); //make the back arrow act like the back button on the android screen
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getIncomingData() {

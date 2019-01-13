@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -21,14 +22,13 @@ public class EditCardText extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_text);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setUpToolbar();
 
         mTextEditor= findViewById(R.id.edit_card_text);
         getIncomingData();
         mTextEditor.setText(mCurrentCardText);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,6 +36,22 @@ public class EditCardText extends AppCompatActivity {
                finish();
             }
         });
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed(); //make the back arrow act like the back button on the android screen
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getIncomingData()
@@ -47,9 +63,11 @@ public class EditCardText extends AppCompatActivity {
     @Override
     public void finish()
     {
-        Intent intentResults = new Intent();
-        intentResults.putExtra(SELECTED_CARD_TEXT, mCurrentCardText);
-        setResult(RESULT_OK, intentResults);
+        if(mCurrentCardText != null) {
+            Intent intentResults = new Intent();
+            intentResults.putExtra(SELECTED_CARD_TEXT, mCurrentCardText);
+            setResult(RESULT_OK, intentResults);
+        }
         super.finish();
     }
 
