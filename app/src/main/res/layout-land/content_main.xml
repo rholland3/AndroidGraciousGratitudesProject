@@ -53,11 +53,11 @@
             android:id="@+id/step1_preview"
             style="@style/step_preview_style" />
 
-            <Button
-                android:id="@+id/step1_button"
-                style="@style/step_button_style"
-                android:text="@string/choose_a_background"
-                android:onClick="launchBackground"/>
+        <Button
+            android:id="@+id/step1_button"
+            style="@style/step_button_style"
+            android:text="@string/choose_a_background"
+            android:onClick="launchBackground"/>
     </LinearLayout>
 
     <LinearLayout style="@style/step_layout_style">

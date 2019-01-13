@@ -21,14 +21,16 @@
         android:id="@+id/final_card_background"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:src="@drawable/ptexturedpinkpetal"
+        tools:src="@drawable/ltexturedpinkpetal"
+        android:layout_gravity="center"
+
         />
     <TextView
         android:id="@+id/final_card_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:paddingHorizontal="50dp"
+        android:paddingHorizontal="110dp"
         tools:text="@string/default_thank_you_card"
         />
 </FrameLayout>

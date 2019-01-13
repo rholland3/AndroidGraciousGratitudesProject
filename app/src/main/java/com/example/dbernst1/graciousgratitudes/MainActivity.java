@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,8 +22,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String FONT = "FONT";
     public static final String SELECTED_CARD_TEXT = "SELECTED_CARD_TEXT";
     public static final String CARD_TEXT = "CARD_TEXT";
+    public static final String SELECTED_CURRENT_ORIENTATION = "SELECTED_CURRENT_ORIENTATION";
     private final int REQUEST_CODE_BACKGROUND = 564;
     private final int REQUEST_CODE_FONT = 563;
     private final int REQUEST_CODE_TEXT = 562;
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mBackground_image;
     private TextView mFont_view;
     private EditText mTextEditor;
+    private RadioGroup mBackgroundLayout;
 
     private int mCurrentFont;
     private int mChosenBackground;
@@ -56,10 +63,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         startNewCard();
-
         setUpFAB();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //save the current values across lifecycle
+
+        outState.putInt(SELECTED_CURRENT_ORIENTATION, mCurrentOrientation);
+
+        if(mChosenBackground == 0)
+        {
+            if(mCurrentOrientation==R.id.portrait)
+                mChosenBackground=R.drawable.ptexturedpinkpetal;
+            else
+                mChosenBackground=R.drawable.ltexturedpinkpetal;
+        }
+        outState.putInt(SELECTED_BACKGROUND, mChosenBackground);
+        outState.putInt(SELECTED_CURRENT_FONT, mCurrentFont);
+
+        //get the text from the text editor in case the user changed it from the main page without going to full screen mode
+        mCurrentText  = mTextEditor.getText().toString();
+        outState.putString(SELECTED_CARD_TEXT, mCurrentText);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mChosenBackground= savedInstanceState.getInt(SELECTED_BACKGROUND);
+        mCurrentFont = savedInstanceState.getInt(SELECTED_CURRENT_FONT);
+        mCurrentText = savedInstanceState.getString(SELECTED_CARD_TEXT);
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void setUpFAB() {
@@ -78,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
         //set the current values - also only for the first time,
         // the rest of the times that this activity is called these variables will be set when the data comes back from the earlier activity
         //in the onActivityResults
+
+        android.support.v7.preference.PreferenceManager.setDefaultValues(this,R.xml.preferences,false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean defaultOrientationPortrait = sharedPreferences.getBoolean(Settings.KEY_PREF_ORIENTATION_SWITCH, false);
+
         mLCurrentBackground = R.drawable.ltexturedpinkpetal;
         mPCurrentBackground = R.drawable.ptexturedpinkpetal;
         mCurrentFont = R.font.kimberly;
@@ -87,6 +128,14 @@ public class MainActivity extends AppCompatActivity {
         mTextEditor = findViewById(R.id.step3_preview);
         mBackground_image=findViewById(R.id.step1_preview);
         mFont_view = findViewById(R.id.step2_preview);
+        mBackgroundLayout = findViewById(R.id.background_image_layout);
+       if(defaultOrientationPortrait)
+       {
+           mBackgroundLayout.check(R.id.portrait);
+       }else
+       {
+           mBackgroundLayout.check(R.id.landscape);
+       }
 
         //only sets the background the first time loads
         mBackground_image.setImageResource(mPCurrentBackground); //since default is portrait
@@ -98,26 +147,7 @@ public class MainActivity extends AppCompatActivity {
         mTextEditor.setText(mCurrentText);
     }
 
-    private void launchCard() {
-        Intent intent;
-        //send in the current background, text and font
-        intent = new Intent(this, DisplayCard.class);
-        if(mChosenBackground == 0)
-        {
-            if(mCurrentOrientation==R.id.portrait)
-                mChosenBackground=R.drawable.ptexturedpinkpetal;
-            else
-                mChosenBackground=R.drawable.ltexturedpinkpetal;
-        }
-        intent.putExtra(SELECTED_BACKGROUND, mChosenBackground);
-        intent.putExtra(SELECTED_CURRENT_FONT, mCurrentFont);
 
-        //get the text from the text editor in case the user changed it from the main page without going to full screen mode
-        mCurrentText  = mTextEditor.getText().toString();
-        intent.putExtra(SELECTED_CARD_TEXT, mCurrentText);
-
-        startActivity(intent);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -167,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
             return true;
         }
 
@@ -192,12 +224,25 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_FONT);
     }
 
-    public void setLandscape(View view) {
-        mCurrentOrientation = R.id.landscape;
-    }
+    private void launchCard() {
+        Intent intent;
+        //send in the current background, text and font
+        intent = new Intent(this, DisplayCard.class);
+        if(mChosenBackground == 0)
+        {
+            if(mCurrentOrientation==R.id.portrait)
+                mChosenBackground=R.drawable.ptexturedpinkpetal;
+            else
+                mChosenBackground=R.drawable.ltexturedpinkpetal;
+        }
+        intent.putExtra(SELECTED_BACKGROUND, mChosenBackground);
+        intent.putExtra(SELECTED_CURRENT_FONT, mCurrentFont);
 
-    public void setPortrait(View view) {
-        mCurrentOrientation = R.id.portrait;
+        //get the text from the text editor in case the user changed it from the main page without going to full screen mode
+        mCurrentText  = mTextEditor.getText().toString();
+        intent.putExtra(SELECTED_CARD_TEXT, mCurrentText);
+
+        startActivity(intent);
     }
 
     public void launchText(View view)
@@ -219,6 +264,14 @@ public class MainActivity extends AppCompatActivity {
     public void newCard(MenuItem item) {
         //call the start new card method to reset all the options to their default values
         startNewCard();
+    }
 
+    //on clicks for the Radio Buttons
+    public void setLandscape(View view) {
+        mCurrentOrientation = R.id.landscape;
+    }
+
+    public void setPortrait(View view) {
+        mCurrentOrientation = R.id.portrait;
     }
 }
