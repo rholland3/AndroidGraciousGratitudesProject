@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         mCurrentText  = mTextEditor.getText().toString();
         outState.putString(SELECTED_CARD_TEXT, mCurrentText);
 
+        outState.putInt(SELECTED_L_CURRENT_BACKGROUND, mLCurrentBackground);
+        outState.putInt(SELECTED_P_CURRENT_BACKGROUND, mPCurrentBackground);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -95,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
         mChosenBackground= savedInstanceState.getInt(SELECTED_BACKGROUND);
         mCurrentFont = savedInstanceState.getInt(SELECTED_CURRENT_FONT);
         mCurrentText = savedInstanceState.getString(SELECTED_CARD_TEXT);
+        mLCurrentBackground = savedInstanceState.getInt(SELECTED_L_CURRENT_BACKGROUND);
+        mPCurrentBackground = savedInstanceState.getInt(SELECTED_P_CURRENT_BACKGROUND);
+        mTextEditor.setText(mCurrentText);
+        mBackground_image.setImageResource(mChosenBackground);
+        Typeface typeface = ResourcesCompat.getFont(getApplicationContext(), mCurrentFont);
+        mFont_view.setTypeface(typeface);
         super.onRestoreInstanceState(savedInstanceState);
     }
 

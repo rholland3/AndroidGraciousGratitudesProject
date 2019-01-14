@@ -25,5 +25,5 @@
     <string name="orientation_preference_summary">Turning this setting off will change the default card orientation to landscape.</string>
     <string name="default_orientation_title">Default Card Orientation - Portrait</string>
 
-    
+
 </resources>
